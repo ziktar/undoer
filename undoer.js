@@ -9,7 +9,7 @@ export class Undoer {
   constructor(callback, zero=null) {
     this._duringUpdate = false;
     this._stack = [zero];
- 
+
     // nb. Previous versions of this used `input` for browsers other than Firefox (as Firefox
     // _only_ supports execCommand on contentEditable)
     this._ctrl = document.createElement('div');
@@ -55,7 +55,11 @@ export class Undoer {
    * @export
    */
   get data() {
-    return this._stack[this._depth];
+    let data = this._stack[this._depth];
+    if (typeof data == "object") {
+      data = Object.assign({}, data);
+    }
+    return data;
   }
 
   /**
@@ -71,6 +75,9 @@ export class Undoer {
     if (!this._ctrl.parentNode) {
       // nb. we check parentNode as this would remove contentEditable's history
       (parent || document.body).appendChild(this._ctrl);
+    }
+    if (typeof data == "object") {
+      data = Object.assign({}, data);
     }
 
     const nextID = this._depth + 1;
