@@ -1,6 +1,6 @@
 {
   "name": "undoer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Native undo/redo behavior for web",
   "homepage": "https://github.com/samthor/undoer",
   "main": "dist/undoer.js",
