@@ -1,4 +1,3 @@
-
 export class Undoer {
 
   /**
@@ -6,7 +5,7 @@ export class Undoer {
    * @param {function(T)} callback to call when undo/redo occurs
    * @param {T=} zero the zero state for undoing everything
    */
-  constructor(callback, zero=null) {
+  constructor(callback, zero = null) {
     this._duringUpdate = false;
     this._stack = [zero];
 
@@ -22,7 +21,7 @@ export class Undoer {
 
     this._ctrl.contentEditable = true;
     this._ctrl.textContent = '0';
-    this._ctrl.style.visibility = 'hidden';  // hide element while not used
+    this._ctrl.style.visibility = 'hidden'; // hide element while not used
 
     this._ctrl.addEventListener('focus', (ev) => {
       // Safari needs us to wait, can't blur immediately.
@@ -83,6 +82,10 @@ export class Undoer {
     const nextID = this._depth + 1;
     this._stack.splice(nextID, this._stack.length - nextID, data);
 
+    this._updateCtrl(nextID);
+  }
+
+  _updateCtrl(nextID) {
     const previousFocus = document.activeElement;
     try {
       this._duringUpdate = true;
@@ -96,5 +99,23 @@ export class Undoer {
     }
 
     previousFocus && previousFocus.focus();
+  }
+
+  pop() {
+    const prevID = this._depth - 1;
+    if (prevID < 0) {
+      return;
+    }
+
+    this._updateCtrl(prevID);
+  }
+
+  unpop() {
+    const nextID = this._depth + 1;
+    if (nextID >= this._stack.length) {
+      return;
+    }
+
+    this._updateCtrl(nextID);
   }
 }
