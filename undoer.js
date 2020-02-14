@@ -108,6 +108,7 @@ export class Undoer {
     }
 
     this._updateCtrl(prevID);
+    callback(this.data);
   }
 
   unpop() {
@@ -117,5 +118,6 @@ export class Undoer {
     }
 
     this._updateCtrl(nextID);
+    callback(this.data);
   }
 }
