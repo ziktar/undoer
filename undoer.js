@@ -82,13 +82,13 @@ export class Undoer {
     const nextID = this._depth + 1;
     this._stack.splice(nextID, this._stack.length - nextID, data);
 
-    this._updateCtrl(nextID);
+    this._updateCtrl(nextID, true);
   }
 
-  _updateCtrl(nextID) {
+  _updateCtrl(nextID, preventCallback) {
     const previousFocus = document.activeElement;
     try {
-      this._duringUpdate = true;
+      this._duringUpdate = preventCallback;
       this._ctrl.style.visibility = null;
       this._ctrl.focus();
       document.execCommand('selectAll');
@@ -107,8 +107,7 @@ export class Undoer {
       return;
     }
 
-    this._updateCtrl(prevID);
-    callback(this.data);
+    this._updateCtrl(prevID, false);
   }
 
   unpop() {
@@ -117,7 +116,6 @@ export class Undoer {
       return;
     }
 
-    this._updateCtrl(nextID);
-    callback(this.data);
+    this._updateCtrl(nextID, false);
   }
 }
